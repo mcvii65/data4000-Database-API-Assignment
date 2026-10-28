@@ -42,7 +42,7 @@ def update_product_price(product_id, price):
     if not price.is_finite() or price < 0 or price != price.quantize(Decimal("0.01")):
         raise ValueError("Use a nonnegative price with at most two decimal places.")
     response = (get_client().table("products").update({"price": str(price)})
-                .eq("product_id", int(product_id)).execute())
+                .eq("product_id", int(product_id)).select().execute())
     if not response.data:
         raise ValueError("Product not found.")
     return response.data[0]
@@ -60,7 +60,9 @@ def create_order(customer_id, product_id, quantity):
         "customer_id": int(customer_id), "product_id": int(product_id),
         "quantity": quantity, "order_date": date.today().isoformat(),
         "unit_price": products[0]["price"]
-    }).execute()
+    }).select().execute()
+    if not response.data:
+        raise RuntimeError("Supabase did not return the inserted order.")
     return response.data[0]
 
 
@@ -73,4 +75,4 @@ def get_orders():
 
 def delete_order(order_id):
     return (get_client().table("orders").delete()
-            .eq("order_id", int(order_id)).execute().data)
+            .eq("order_id", int(order_id)).select().execute().data)

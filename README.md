@@ -1,7 +1,94 @@
 # DATA 4000 — Python + Supabase API Lab
 Fairfield University · Illya Mowerman, Ph.D.
 
-## Start here
+## DATA 4000 order-entry assignment
+
+The required terminal program is `order_entry.py`. It reads customers and products
+from Supabase, validates each entry, asks for confirmation, inserts one order,
+then makes a separate Supabase query to retrieve and display the saved order.
+It does not use the CSV files for the catalog display and does not start a web app.
+
+### Setup and run
+
+1. Create your own Supabase project. In its SQL Editor, run the complete
+   `DATA_4000_Supabase_Starter.sql` file provided for this assignment once. It
+   creates and seeds the `customers`, `products`, and `orders` tables. Use a new,
+   otherwise-empty project; do not run it if those tables already exist.
+2. In the VS Code terminal at the repository root, install the dependencies and
+   create `.env` from `.env.example` if you do not already have `.env`:
+
+   macOS / Linux:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   python3 -m pip install -r requirements.txt
+   cp -n .env.example .env
+   ```
+
+   Windows PowerShell:
+   ```powershell
+   py -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   py -m pip install -r requirements.txt
+   if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+   ```
+
+3. In your local `.env`, replace the placeholders with your own Supabase project
+   URL and secret API key if you have not configured it already. Keep an existing
+   `.env` file rather than overwriting it. Never commit or share `.env`;
+   `.gitignore` excludes it.
+4. Run the required command in the VS Code terminal:
+   ```bash
+   python order_entry.py
+   ```
+
+Follow the prompts to choose existing IDs, enter a positive whole-number quantity,
+and confirm with Y or N. On confirmation, the program gets the current price from
+the product table, lets Supabase generate the order ID, and queries that ID again
+to verify the saved record. If verification fails, it reports that and does not
+repeat the insert. After a successful order or cancellation, it offers to start
+another order.
+
+### Assignment test results
+
+Run the local tests with:
+```bash
+python -m unittest discover -s tests -v
+```
+
+Result on October 28, 2026: **PASS — 9 tests passed.** The tests exercise text and
+unknown IDs, all required invalid quantities (`0`, `-2`, `1.5`, and `hello`),
+confirmation reprompting, cancellation without an insert, a confirmed order
+followed by a separate verification query, and no retry when verification
+returns no order. They also cover safe diagnostics for API and network errors.
+These tests use mocked Supabase responses and do not change the hosted database.
+
+A live insert-and-retrieve run still needs to be performed in your own Supabase
+project. After running `python order_entry.py`, copy the successful terminal
+output here (or add a screenshot) and record the date. Make sure the evidence
+contains no API keys or other credentials. Also manually record that the
+confirmed order appears in Supabase and that a canceled order does not.
+
+Live connectivity/cancellation check on October 28, 2026: **PASS** — the program
+loaded 20 customers and 12 products from Supabase and canceled at confirmation;
+no insert was attempted. The live confirmed insert and retrieval check is still
+pending.
+
+Order ID: 1001
+
+Verified order retrieved from Supabase
+Order ID | Customer     | Product   | Quantity | Unit Price | Total   | Order Date
+---------+--------------+-----------+----------+------------+---------+-----------
+1001     | Riley Brooks | Desk Lamp | 10       | $29.00     | $290.00 | 2026-10-28
+
+## Broader Supabase API lab (separate workflow)
+
+The remaining sections describe the broader CSV/import lab, which uses
+`sql/01_create_tables.sql` and Python data loaders. For the order-entry assignment,
+follow the setup above and run the complete provided `DATA_4000_Supabase_Starter.sql`
+instead. Do not combine both database setup paths in one Supabase project.
+
+## CSV lab: setup and workflow
 Build a fictional campus store database, upload CSV records with Python, and use
 an API to read and change records. Plan for 75–90 minutes with accounts created
 before class. Python fundamentals (functions, lists, dictionaries, imports) are assumed.
