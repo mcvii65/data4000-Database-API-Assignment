@@ -82,6 +82,29 @@ Order ID | Customer     | Product   | Quantity | Unit Price | Total   | Order Da
 ---------+--------------+-----------+----------+------------+---------+-----------
 1001     | Riley Brooks | Desk Lamp | 10       | $29.00     | $290.00 | 2026-10-28
 ```
+Enter customer ID: mike
+customer ID must be a whole number. Please try again.
+
+Enter customer ID: 1000000000000000
+No customer with ID 1000000000000000 exists. Please try again.
+
+Enter product ID: 100000000000
+No product with ID 100000000000 exists. Please try again.
+
+Enter product ID: -2
+No product with ID -2 exists. Please try again.
+
+Order summary
+Customer     | Product  | Quantity | Unit Price | Order Total
+-------------+----------+----------+------------+------------
+Jordan Patel | Backpack | 2        | $45.00     | $90.00
+Confirm this order? (Y/N): N
+Order canceled. No order was inserted.
+
+Verified order retrieved from Supabase
+Order ID | Customer     | Product  | Quantity | Unit Price | Total | Order Date
+---------+--------------+----------+----------+------------+-------+-----------
+1002     | Avery Morgan | Notebook | 1        | $4.50      | $4.50 | 2026-10-28
 
 ## Broader Supabase API lab (separate workflow)
 
