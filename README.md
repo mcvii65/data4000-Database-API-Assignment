@@ -63,23 +63,25 @@ followed by a separate verification query, and no retry when verification
 returns no order. They also cover safe diagnostics for API and network errors.
 These tests use mocked Supabase responses and do not change the hosted database.
 
-A live insert-and-retrieve run still needs to be performed in your own Supabase
-project. After running `python order_entry.py`, copy the successful terminal
-output here (or add a screenshot) and record the date. Make sure the evidence
-contains no API keys or other credentials. Also manually record that the
-confirmed order appears in Supabase and that a canceled order does not.
-
 Live connectivity/cancellation check on October 28, 2026: **PASS** — the program
 loaded 20 customers and 12 products from Supabase and canceled at confirmation;
-no insert was attempted. The live confirmed insert and retrieval check is still
-pending.
+no insert was attempted during that cancellation check.
 
-Order ID: 1001
+Live saved-order verification on October 28, 2026: **PASS** — the `orders` table
+contained order ID 1001, above the 60 seeded orders. A fresh Supabase API query
+filtered to order ID 1001 returned the saved record below. This check did not
+insert another order. The displayed total is quantity multiplied by the
+retrieved stored unit price. The order was already present when this verification
+was run, so this output documents the persisted row and separate retrieval rather
+than the original insert response.
 
-Verified order retrieved from Supabase
+Copied terminal output from the fresh verification query:
+```text
+Fresh Supabase verification query returned:
 Order ID | Customer     | Product   | Quantity | Unit Price | Total   | Order Date
 ---------+--------------+-----------+----------+------------+---------+-----------
 1001     | Riley Brooks | Desk Lamp | 10       | $29.00     | $290.00 | 2026-10-28
+```
 
 ## Broader Supabase API lab (separate workflow)
 
